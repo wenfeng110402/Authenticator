@@ -1,6 +1,5 @@
 import click
 import time
-import msvcrt
 import questionary
 import authenticator
 import authenticator.core
@@ -76,9 +75,6 @@ def now(secret, refresh, no_color, once):
                     else:
                         panel = Panel(f"[bold green]{code}[/bold green]\n[green]Valid for {remaining} seconds[/green]", title="TOTP Code NOW", border_style="green")
                 live.update(panel)
-                if msvcrt.kbhit():
-                    msvcrt.getch()
-                    break
                 time.sleep(1)
         except KeyboardInterrupt:
             console.print("\nExiting...")

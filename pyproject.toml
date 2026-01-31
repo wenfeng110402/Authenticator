@@ -8,7 +8,7 @@ dependencies = [
     "questionary",
     "pyotp",
     "qrcode",
-    "textual",
+    "textual==7.5.0",
 ]
 
 [project.scripts]
