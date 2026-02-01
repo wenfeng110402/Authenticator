@@ -14,13 +14,14 @@ A simple, polished CLI for managing and viewing TOTP (one-time password) codes.
 
 ## Installation
 
-From the project root:
+Run `pip install hackauth`
+
+Another way from the project root:
 
 - Create and activate an environment (example uses a local .conda):
 
   - `conda create -p .conda python=3.11 -y`
   - `conda activate .conda`
-
 - Install dependencies and register the CLI:
 
   - `pip install -e .`
