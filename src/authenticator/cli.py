@@ -249,6 +249,33 @@ def panel():
     run_panel()
 
 
+@cli.command()
+@click.option("--format", type=click.Choice(["table", "json", "plain"]), default="table", help="Output your key")
+def output(format):
+    """Export all stored keys."""
+    storage = Storage()
+    keys = storage.list_keys()
+    
+    if not keys:
+        console.print("[yellow]No stored secrets[/yellow]")
+        return
+
+    if format == "json":
+        import json
+        console.print_json(data=keys)
+    elif format == "plain":
+        for name, secret in keys.items():
+            console.print(f"{name}: {secret}")
+    else:
+        table = Table(title="Exported Secrets", border_style="bold magenta")
+        table.add_column("Account Name", style="cyan bold")
+        table.add_column("Secret Key", style="yellow")
+        
+        for name, secret in keys.items():
+            table.add_row(name, secret)
+        console.print(table)
+
+
 def main():
     cli()
 
