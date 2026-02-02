@@ -50,7 +50,18 @@ def version():
 @click.option("--no-color", is_flag=True, help="Disable colored output")
 @click.option("--once", is_flag=True, help="Print once and exit")
 def now(secret, refresh, no_color, once):
-    gen = authenticator.core.TOTPGenerator(secret)
+    # Clean secret (remove whitespace and common accidental characters)
+    secret = secret.strip().upper()
+    
+    try:
+        gen = authenticator.core.TOTPGenerator(secret)
+        # Test if it can generate a code to validate secret
+        gen.now()
+    except Exception as e:
+        console.print(f"[red]Error: Invalid Secret Key.[/red]")
+        console.print(f"[yellow]Details: {e}[/yellow]")
+        return
+
     if once:
         code = gen.now()
         remaining = gen.remaining()

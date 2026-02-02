@@ -1,5 +1,17 @@
 # Authenticator
 
+```text
+  ______               __      __                                                  __                         
+ /      \             /  |    /  |                                                /  |                        
+/$$$$$$  | __    __  _$$ |_   $$ |____    ______   _______    _______   ______   _$$ |_     ______    ______  
+$$ |__$$ |/  |  /  |/ $$   |  $$      \  /      \ /       \  /       | /      \ / $$   |   /      \  /      \ 
+$$    $$ |$$ |  $$ |$$$$$$/   $$$$$$$  |/$$$$$$  |$$$$$$$  |/$$$$$$$/  $$$$$$  |$$$$$$/   /$$$$$$  |/$$$$$$  |
+$$$$$$$$ |$$ |  $$ |  $$ | __ $$ |  $$ |$$    $$ |$$ |  $$ |$$ |       /    $$ |  $$ | __ $$ |  $$ |$$ |  $$/ 
+$$ |  $$ |$$ \__$$ |  $$ |/  |$$ |  $$ |$$$$$$$$/ $$ |  $$ |$$ \_____ /$$$$$$$ |  $$ |/  |$$ \__$$ |$$ |      
+$$ |  $$ |$$    $$/   $$  $$/ $$ |  $$ |$$       |$$ |  $$ |$$       |$$    $$ |  $$  $$/ $$    $$/ $$ |      
+$$/   $$/  $$$$$$/     $$$$/  $$/   $$/  $$$$$$$/ $$/   $$/  $$$$$$$/  $$$$$$$/    $$$$/   $$$$$$/  $$/       
+```
+
 A simple, polished CLI for managing and viewing TOTP (one-time password) codes.
 
 ## Features
@@ -43,3 +55,12 @@ Manage stored secrets (add/rename/delete/list):
 Open the live dashboard:
 
 `auth panel`
+
+Show your stored keys:
+
+`auth output`
+
+Optionally, export in different formats:
+
+`auth output --format json`
+`auth output --format plain`
