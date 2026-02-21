@@ -10,6 +10,7 @@ from rich.panel import Panel
 from rich.live import Live
 from rich.table import Table
 from authenticator.storage import Storage
+from authenticator.sync import wireless_sync, wireless_receiver
 
 console = Console()
 
@@ -285,6 +286,78 @@ def output(format):
         for name, secret in keys.items():
             table.add_row(name, secret)
         console.print(table)
+
+@cli.command()
+@click.option("--way", type=click.Choice(["file", "wireless"]), default="file", help="Sync your key")
+@click.option("--output", "-o", type=click.Path(), help="Output file path for file sync (e.g. sync.json)")
+@click.option("--role", type=click.Choice(["sender", "receiver"]), help="Wireless mode: sender or receiver")
+@click.option("--port", type=int, default=9999, show_default=True, help="Port for wireless sync")
+def sync(way, output, role, port):
+    import json
+
+    storage = Storage()
+
+    if way == "file":
+        keys = storage.list_keys()
+        if not keys:
+            console.print("[yellow]No stored secrets to sync[/yellow]")
+            return
+        # 生成默认文件名（包含时间戳）
+        if not output:
+            output = f"authenticator_backup_{int(time.time())}.json"
+        
+        try:
+            # 创建输出目录（如果不存在）
+            output_dir = os.path.dirname(output)
+            if output_dir and not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            
+            # 保存为 JSON 文件
+            with open(output, 'w') as f:
+                json.dump(keys, f, indent=2)
+            
+            file_size = os.path.getsize(output)
+            console.print(f"[green]✓ Successfully exported to: {output}[/green]")
+            console.print(f"[cyan]File size: {file_size} bytes[/cyan]")
+            console.print(f"[yellow]Total keys: {len(keys)}[/yellow]")
+        except Exception as e:
+            console.print(f"[red]✗ Export failed: {e}[/red]")
+    
+    elif way == "wireless":
+        if not role:
+            role = questionary.select(
+                "Select role:",
+                choices=["sender", "receiver"],
+                use_arrow_keys=True
+            ).ask()
+
+        if role == "sender":
+            keys = storage.list_keys()
+            if not keys:
+                console.print("[yellow]No stored secrets to sync[/yellow]")
+                return
+            wireless_sync(keys, role, port)
+            return
+
+        received = wireless_receiver(port)
+        if not received:
+            return
+
+        skipped = 0
+        added = 0
+        existing = storage.list_keys()
+        for name, secret in received.items():
+            if name in existing:
+                skipped += 1
+                continue
+            storage.add(name, secret)
+            added += 1
+
+        console.print(f"[green]✓ Imported {added} key(s)[/green]")
+        if skipped:
+            console.print(f"[yellow]Skipped {skipped} existing key(s)[/yellow]")
+        
+    
 
 
 def main():

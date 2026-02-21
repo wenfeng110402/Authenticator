@@ -11,7 +11,7 @@ from authenticator.core import TOTPGenerator
 from authenticator.storage import Storage
 
 
-class TotpApp(App):
+class Panel(App):
     CSS = """
     Screen {
         background: #0d1117;
@@ -161,4 +161,4 @@ class TotpApp(App):
 
 
 def run_panel() -> None:
-    TotpApp().run()
+    Panel().run()
